@@ -1,0 +1,25 @@
+[h1]Active Item Library / 主动道具前置库[/h1]
+
+This is a dependency library for Brotato content mods. It adds no characters, weapons, items or ability effects by itself. Install a content mod that uses this API to see active items in game.
+
+这是供内容模组使用的前置库。单独安装不会添加角色、武器、道具或技能效果；需要配合接入本接口的内容模组。
+
+[h2]Player features / 玩家功能[/h2]
+[list]
+[*]One separate active-item slot per player / 每名玩家一个独立主动道具槽位
+[*]Q on keyboard or RB/R1 on controller by default / 默认 Q 键或手柄右肩键触发
+[*]Cooldown and item icon shown during battle / 战斗中显示图标与冷却
+[*]Choose which item to keep when you gain a second active item / 获得第二件时弹窗二选一
+[*]Keeping your original item after buying a new one refunds the purchase / 商店购买后保留旧道具可退款
+[*]Works solo and with Brotato Online / 支持单机及 Brotato Online
+[/list]
+
+[h2]For mod creators / 给模组作者[/h2]
+Declare [code]L1SC-ActiveItemLibrary[/code] as a dependency. Register your own [code]ItemData.my_id[/code] through [code]/root/ModLoader/L1SC-ActiveItemLibrary/ActiveItemService[/code]. The resource must be an item with [code]max_nb = 1[/code]. Implement [code]activate_active_item(player_index, item_id, request_data)[/code] in your handler. The ZIP contains [code]CREATOR_API.md[/code] with the full API, starting-item and character-pool examples, and Online authority rules.
+
+在你的模组依赖中加入 [code]L1SC-ActiveItemLibrary[/code]，注册自己的道具 ID 与技能处理器。可以利用原版角色开局道具，并用角色专属主动道具池限制随机刷新；未限制的角色能自由组合。接口细节见 ZIP 内 [code]CREATOR_API.md[/code]。
+
+[h2]Compatibility / 兼容范围[/h2]
+Built for Brotato 1.1.15.4 and ModLoader 6.2.0. Tested with Brotato Online 6.6.6 in isolated two-process LAN: client activation, host-authoritative effect callback, active-item choice and host shop purchase. Every player in an Online session should use the same library and content-mod versions. Online is optional for solo play.
+
+针对 Brotato 1.1.15.4、ModLoader 6.2.0 制作；已用 Brotato Online 6.6.6 双进程 LAN 验证。联机所有玩家应安装同版本的前置库与内容模组。单机无需安装 Online。
