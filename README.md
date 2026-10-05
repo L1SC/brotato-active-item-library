@@ -34,3 +34,7 @@ func activate_active_item(player_index: int, item_id: String, request_data: Dict
 ## 从源码构建
 
 运行 `python tools/build.py`，得到 `dist/L1SC-ActiveItemLibrary.zip`。工坊预览图可运行 `python workshop/generate_preview.py` 生成。[工坊发布记录](workshop/publishing.md)包含已发布 ZIP 的校验值与核验结果。
+
+## 开源许可
+
+本仓库中的原创源码、接口文档、构建脚本和工坊素材采用 [MIT License](LICENSE) 发布。使用、修改和再发布时请保留许可证与版权声明。Brotato、Brotato Online 以及其他第三方项目和商标不属于本许可范围。
