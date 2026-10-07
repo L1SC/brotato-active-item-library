@@ -1,6 +1,15 @@
 extends "res://singletons/run_data.gd"
 
 const SERVICE_PATH = "/root/ModLoader/L1SC-ActiveItemLibrary/ActiveItemService"
+const STAT_SERVICE_PATH = "/root/ModLoader/L1SC-ActiveItemLibrary/CustomStatService"
+
+
+func get_player_effects(player_index: int) -> Dictionary:
+	var effects = .get_player_effects(player_index)
+	var stat_service = get_node_or_null(STAT_SERVICE_PATH)
+	if stat_service != null:
+		stat_service.seed_effects(effects)
+	return effects
 
 
 func add_item(item, player_index: int, arg2 = false) -> void:

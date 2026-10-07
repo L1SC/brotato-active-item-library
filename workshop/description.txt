@@ -19,6 +19,10 @@ Declare [code]L1SC-ActiveItemLibrary[/code] as a dependency. Register your own [
 
 在你的模组依赖中加入 [code]L1SC-ActiveItemLibrary[/code]，注册自己的道具 ID 与技能处理器。可以利用原版角色开局道具，并用角色专属主动道具池限制随机刷新；未限制的角色能自由组合。接口细节见 ZIP 内 [code]CREATOR_API.md[/code]。
 
+Version 1.0.1 also provides [code]/root/ModLoader/L1SC-ActiveItemLibrary/CustomStatService[/code]. Content mods can register a namespaced integer stat, create positive or negative ordinary item [code]Effect[/code] resources with [code]make_effect[/code], and read the current value with [code]get_value[/code]. The content mod defines the stat's gameplay meaning and display text; see [code]CREATOR_API.md[/code] for the API.
+
+1.0.1 新增 [code]CustomStatService[/code] 通用自定义整数属性接口。内容模组可登记带命名空间的属性，让普通道具通过原版 [code]Effect[/code] 增减属性，再读取当前值；属性用途和显示文字由内容模组自行定义。接口示例见 ZIP 内 [code]CREATOR_API.md[/code]。
+
 [h2]Compatibility / 兼容范围[/h2]
 Built for Brotato 1.1.15.4 and ModLoader 6.2.0. Tested with Brotato Online 6.6.6 in isolated two-process LAN: client activation, host-authoritative effect callback, active-item choice and host shop purchase. Every player in an Online session should use the same library and content-mod versions. Online is optional for solo play.
 

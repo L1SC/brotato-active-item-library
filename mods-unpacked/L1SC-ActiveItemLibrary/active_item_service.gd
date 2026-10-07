@@ -18,6 +18,7 @@ const BINDINGS_PATH = "user://l1sc_active_item_library_bindings.cfg"
 const DEFAULT_KEY = KEY_Q
 const DEFAULT_JOYPAD_BUTTON = 5 # Godot 3 right shoulder / RB.
 const CHOICE_QUEUE_TTL_MSEC = 15000
+const HUD_ICON_SIZE = 28
 
 var _active_items = {}
 var _character_active_pools = {}
@@ -721,6 +722,9 @@ func _try_connect_online_api() -> void:
 func _load_bindings() -> void:
 	var config = ConfigFile.new()
 	if config.load(BINDINGS_PATH) == OK:
+		# Version 2 at this path belongs to older valotato releases.
+		if int(config.get_value("input", "version", 0)) >= 2:
+			return
 		_key_scancode = max(1, int(config.get_value("input", "keyboard_scancode", DEFAULT_KEY)))
 		_joypad_button = max(0, int(config.get_value("input", "joypad_button", DEFAULT_JOYPAD_BUTTON)))
 	else:
@@ -760,19 +764,25 @@ func _update_hud() -> void:
 		return
 	var visible_indices = []
 	for player_index in _get_local_player_indices():
-		var state = get_state(int(player_index))
-		visible_indices.append(int(player_index))
-		var slot = _hud_slots.get(player_index, {})
+		var index = int(player_index)
+		visible_indices.append(index)
+		var state = get_state(index)
+		var item = _find_owned_item(index, str(state["item_id"]))
+		var health_bar = get_tree().current_scene.get_node_or_null("UI/HUD/LifeContainerP%d/UILifeBarP%d" % [index + 1, index + 1])
+		var slot = _hud_slots.get(index, {})
+		if item == null or health_bar == null or not health_bar.is_visible_in_tree():
+			if not slot.empty():
+				slot["panel"].hide()
+			continue
 		if slot.empty():
-			slot = _create_hud_slot(int(player_index))
-			_hud_slots[player_index] = slot
-		slot["panel"].rect_position = Vector2(16, 138 + 70 * (visible_indices.size() - 1))
-		var item = _find_owned_item(int(player_index), str(state["item_id"]))
-		slot["icon"].texture = item.icon if item != null else null
-		var status = "Empty" if str(state["item_id"]) == "" else ("Down" if not bool(state["alive"]) else ("Ready" if bool(state["ready"]) else ("Pending" if bool(state["pending"]) else "%.1f s" % float(state["cooldown_remaining"]))))
-		var pad_name = "RB" if _joypad_button == DEFAULT_JOYPAD_BUTTON else "Pad %d" % _joypad_button
-		slot["title"].text = "P%d  Active item  [%s / %s]" % [int(player_index) + 1, OS.get_scancode_string(_key_scancode), pad_name]
-		slot["detail"].text = "%s  ·  %s" % [str(state["display_name"]) if str(state["item_id"]) != "" else "Empty slot", status]
+			slot = _create_hud_slot(index)
+			_hud_slots[index] = slot
+		var bar_rect = health_bar.get_global_rect()
+		var x = bar_rect.end.x if bar_rect.position.x < get_viewport().size.x / 2.0 else bar_rect.position.x - HUD_ICON_SIZE
+		slot["panel"].rect_position = Vector2(x, bar_rect.position.y + (bar_rect.size.y - HUD_ICON_SIZE) / 2.0)
+		slot["panel"].show()
+		slot["icon"].texture = item.icon
+		slot["icon"].modulate = Color(1, 1, 1) if bool(state["ready"]) else Color(0.35, 0.35, 0.35)
 	for player_index in _hud_slots.keys():
 		if not visible_indices.has(player_index):
 			_hud_slots[player_index]["panel"].queue_free()
@@ -780,31 +790,24 @@ func _update_hud() -> void:
 
 
 func _create_hud_slot(player_index: int) -> Dictionary:
-	var panel = PanelContainer.new()
+	var panel = Panel.new()
 	panel.name = "Player%dActiveItemSlot" % (player_index + 1)
-	panel.rect_min_size = Vector2(250, 58)
-	panel.rect_scale = Vector2(1.5, 1.5)
+	panel.rect_size = Vector2(HUD_ICON_SIZE, HUD_ICON_SIZE)
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_hud_layer.add_child(panel)
-	var margin = MarginContainer.new()
-	for side in ["left", "top", "right", "bottom"]:
-		margin.add_constant_override("margin_" + side, 5)
-	panel.add_child(margin)
-	var row = HBoxContainer.new()
-	row.add_constant_override("separation", 8)
-	margin.add_child(row)
+	var background = StyleBoxFlat.new()
+	background.bg_color = Color(0.08, 0.08, 0.08, 0.9)
+	background.border_color = Color(0.85, 0.85, 0.85)
+	background.set_border_width_all(1)
+	panel.add_stylebox_override("panel", background)
 	var icon = TextureRect.new()
-	icon.rect_min_size = Vector2(42, 42)
+	icon.rect_position = Vector2(2, 2)
+	icon.rect_size = Vector2(HUD_ICON_SIZE - 4, HUD_ICON_SIZE - 4)
 	icon.expand = true
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	row.add_child(icon)
-	var labels = VBoxContainer.new()
-	row.add_child(labels)
-	var title = Label.new()
-	labels.add_child(title)
-	var detail = Label.new()
-	labels.add_child(detail)
-	return {"panel": panel, "icon": icon, "title": title, "detail": detail}
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	panel.add_child(icon)
+	return {"panel": panel, "icon": icon}
 
 
 func _clear_hud() -> void:

@@ -1,8 +1,8 @@
 {
   "name": "ActiveItemLibrary",
   "namespace": "L1SC",
-  "version_number": "1.0.0",
-  "description": "Content-free active item API with one slot, Q/RB input, item choice, cooldown, character pools, and Brotato Online support. 主动道具前置库。",
+  "version_number": "1.0.1",
+  "description": "Content-free active item and custom stat APIs, with one active slot, Q/RB input, cooldown, item choice, and Brotato Online support. 主动道具与自定义属性前置库。",
   "website_url": "",
   "dependencies": [],
   "extra": {

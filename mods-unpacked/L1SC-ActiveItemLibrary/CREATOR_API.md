@@ -1,10 +1,37 @@
 # Active Item Library / 主动道具前置库
 
-Mod ID: `L1SC-ActiveItemLibrary`  
-Service node: `/root/ModLoader/L1SC-ActiveItemLibrary/ActiveItemService`  
-Supported target: Brotato 1.1.15.4 with ModLoader 6.2.0. Brotato Online 6.6.6 is optional.
+- Mod ID: `L1SC-ActiveItemLibrary`
+- Active-item service node: `/root/ModLoader/L1SC-ActiveItemLibrary/ActiveItemService`
+- Custom-stat service node: `/root/ModLoader/L1SC-ActiveItemLibrary/CustomStatService`
+- Supported target: Brotato 1.1.15.4 with ModLoader 6.2.0. Brotato Online 6.6.6 is optional.
 
-This library contains no characters, items, weapons or skill effects. Content mods supply their own `ItemData` and activation handler. The library supplies one active-item slot per player, Q/RB input, cooldown, an item-choice popup, save state support and Brotato Online messaging.
+This library contains no characters, items, weapons or skill effects. Content mods supply their own `ItemData` and activation handler. The library supplies one active-item slot per player, Q/RB input, cooldown, an item-choice popup, save state support and Brotato Online messaging. It also provides a generic interface for integer custom stats backed by the game's ordinary item `Effect` resources.
+
+## Register and use a custom stat
+
+Add `L1SC-ActiveItemLibrary` to your content mod's `manifest.json` `dependencies`. Register each stat before ContentLoader creates any `ItemData` effects that use it. Use a key unique to your mod and register the display text key in your mod's translations. The library does not assign gameplay meaning, units or a maximum to the value.
+
+```gdscript
+const STATS_PATH = "/root/ModLoader/L1SC-ActiveItemLibrary/CustomStatService"
+const STAT_KEY = "stat_your_namespace_skill_strength"
+const STAT_TEXT_KEY = "YOUR_NAMESPACE_SKILL_STRENGTH"
+
+func _ready() -> void:
+    var stats = get_node(STATS_PATH)
+    var accepted = stats.register_stat(STAT_KEY, STAT_TEXT_KEY, 0)
+    assert(accepted)
+    # Load content that uses this stat after registration.
+
+func add_stat_effect(item: Resource) -> void:
+    var stats = get_node(STATS_PATH)
+    item.effects = item.effects.duplicate()
+    item.effects.append(stats.make_effect(STAT_KEY, 25))
+
+func read_stat(player_index: int) -> int:
+    return get_node(STATS_PATH).get_value(player_index, STAT_KEY)
+```
+
+`register_stat(key: String, text_key: String, default_value: int = 0) -> bool` declares the stat and its starting value; it returns `false` for an empty or duplicate key, empty text key, or a hash collision. Call it before `make_effect()`, which returns `null` for an unregistered key. `make_effect(key: String, value: int) -> Resource` creates an ordinary game `Effect`; positive and negative values can be combined across items. `get_value(player_index: int, key: String) -> int` reads the current value. When an item grants or removes its effect, the game's normal effect application updates the stat; inventory and effect persistence use the game's normal save path. The content mod decides how to interpret the number and must register its own display translation. Custom stats are not automatically added to the game's stat panel.
 
 ## Declare an active item
 
@@ -64,7 +91,7 @@ This restricts only **registered active items** that can appear from random item
 - `request_activation(player_index, request_data = {})` supports programmatic use. On a client, `true` means the request was sent, not that the host accepted it.
 - Signals: `active_item_activated(player_index, item_id, visual)`, `state_changed(player_index, state)`, `activation_rejected(player_index, reason)`, and `active_item_changed(player_index, item_id)`.
 
-Cooldown advances only during an unpaused battle and resets when the equipped item changes or a new battle scene starts. The separate HUD slot shows the icon, binding and cooldown. The library will run solo without Brotato Online; when Online is installed and a session is active, the host validates player ownership, inventory, life state and cooldown before executing the handler.
+Cooldown advances only during an unpaused battle and resets when the equipped item changes or a new battle scene starts. A small icon beside the player's health bar shows the equipped item: bright when ready, dark while unavailable or cooling down. The library will run solo without Brotato Online; when Online is installed and a session is active, the host validates player ownership, inventory, life state and cooldown before executing the handler.
 
 ## Installation and compatibility
 

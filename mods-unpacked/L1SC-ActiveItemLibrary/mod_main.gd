@@ -1,6 +1,7 @@
 extends Node
 
 const SERVICE_SCRIPT = preload("res://mods-unpacked/L1SC-ActiveItemLibrary/active_item_service.gd")
+const STAT_SERVICE_SCRIPT = preload("res://mods-unpacked/L1SC-ActiveItemLibrary/custom_stat_service.gd")
 
 
 func _init() -> void:
@@ -11,6 +12,9 @@ func _init() -> void:
 
 
 func _ready() -> void:
+	var stat_service = STAT_SERVICE_SCRIPT.new()
+	stat_service.name = "CustomStatService"
+	add_child(stat_service)
 	var service = SERVICE_SCRIPT.new()
 	service.name = "ActiveItemService"
 	add_child(service)
