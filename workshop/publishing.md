@@ -1,5 +1,15 @@
 # Steam 创意工坊发布记录
 
+## 1.0.1 — 2026-10-08
+
+- 更新原[公开工坊条目 3814123809](https://steamcommunity.com/sharedfiles/filedetails/?id=3814123809)，没有创建新条目。新 ZIP 为 15,092 字节、8 个文件，仅含 `L1SC-ActiveItemLibrary`；SHA256 为 `12ff5491f30fe2e76cef331a1401206731af107f26ea76478da4c72d93cbffe0`。
+- 新增 `CustomStatService`：注册自定义整数属性、生成可随普通道具增减的原版 `Effect`、读取玩家属性值。保留现有主动道具接口；血条旁图标布局纳入此次更新。工坊说明已同步。
+- SteamUGC 返回 `item_updated = 1`、`needs_agreement = false`。远程查询显示应用 ID `1942280`、原所有者、公开状态和新文件大小；随后调用 `downloadItem`，Steam 安装 ZIP 的大小与 SHA256 均与发布包一致。
+- [GitHub Release v1.0.1](https://github.com/L1SC/brotato-active-item-library/releases/tag/v1.0.1) 已公开；重新下载的 ZIP 与工坊发布包 SHA256 一致，附带 SHA256 文件。
+- 实际 Brotato 1.1.15.4 运行时通过库单独启动、主动道具单机 35 项和双进程 LAN 17/18 项回归；自定义属性的默认值、正负道具效果及存档恢复也通过。与 valotato 双模组加载的属性、按键和局内状态恢复通过，当前源码 LAN 房主 17 项、客户端 27 项通过。
+
+## 1.0.0 — 2026-10-05
+
 - 发布日期：2026-10-05（Steam 时间戳 `1791215853`）
 - Mod ID / 版本：`L1SC-ActiveItemLibrary` / `1.0.0`
 - [公开工坊条目](https://steamcommunity.com/sharedfiles/filedetails/?id=3814123809)
