@@ -1,5 +1,12 @@
 # Steam 创意工坊发布记录
 
+## 1.0.2 — 2026-10-08
+
+- 更新原[公开工坊条目 3814123809](https://steamcommunity.com/sharedfiles/filedetails/?id=3814123809)，将主动道具键盘默认键从 Q 改为空格键，手柄仍为 RB/R1。旧版未标版本且设为 Q 的配置会迁移到空格键，非 Q 的自定义按键保留；用户之后手动设回 Q 也会保存。
+- ZIP 为 15,221 字节、8 个文件，SHA256 为 `bc8bd772a2bddafb8a30dcbc816a17c4dd1bd49c6551de4c82f37b8cc0a02d33`。SteamUGC 返回 `item_updated = 1`、`needs_agreement = false`；重新下载后的工坊 ZIP 与发布包逐字节一致。
+- [GitHub Release v1.0.2](https://github.com/L1SC/brotato-active-item-library/releases/tag/v1.0.2) 已公开；重新下载的 ZIP SHA256 与工坊包一致。
+- 实际 Godot 隔离运行通过新旧配置迁移、空格键单机 35 项、双进程 LAN 房主 17 项/客户端 18 项，以及与 valotato 同时加载的逐风属性和 LAN 检查。本机已启用的模组配置下，两套服务读取的默认键均为空格键。
+
 ## 1.0.1 — 2026-10-08
 
 - 更新原[公开工坊条目 3814123809](https://steamcommunity.com/sharedfiles/filedetails/?id=3814123809)，没有创建新条目。新 ZIP 为 15,092 字节、8 个文件，仅含 `L1SC-ActiveItemLibrary`；SHA256 为 `12ff5491f30fe2e76cef331a1401206731af107f26ea76478da4c72d93cbffe0`。
