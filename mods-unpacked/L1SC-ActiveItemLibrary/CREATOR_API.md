@@ -5,7 +5,7 @@
 - Custom-stat service node: `/root/ModLoader/L1SC-ActiveItemLibrary/CustomStatService`
 - Supported target: Brotato 1.1.15.4 with ModLoader 6.2.0. Brotato Online 6.6.6 is optional.
 
-This library contains no characters, items, weapons or skill effects. Content mods supply their own `ItemData` and activation handler. The library supplies one active-item slot per player, Q/RB input, cooldown, an item-choice popup, save state support and Brotato Online messaging. It also provides a generic interface for integer custom stats backed by the game's ordinary item `Effect` resources.
+This library contains no characters, items, weapons or skill effects. Content mods supply their own `ItemData` and activation handler. The library supplies one active-item slot per player, Space/RB input, cooldown, an item-choice popup, save state support and Brotato Online messaging. It also provides a generic interface for integer custom stats backed by the game's ordinary item `Effect` resources.
 
 ## Register and use a custom stat
 
@@ -85,7 +85,7 @@ This restricts only **registered active items** that can appear from random item
 
 ## Input, state and signals
 
-- Keyboard Q and gamepad right shoulder (RB/R1) activate the equipped item by default. `get_bindings()` returns `keyboard_scancode` and `joypad_button`. `set_bindings(scancode, button_index)` changes both and stores them in `user://l1sc_active_item_library_bindings.cfg`. There is no in-game rebinding menu.
+- Keyboard Space and gamepad right shoulder (RB/R1) activate the equipped item by default. `get_bindings()` returns `keyboard_scancode` and `joypad_button`. `set_bindings(scancode, button_index)` changes both and stores them in `user://l1sc_active_item_library_bindings.cfg`. Any unversioned binding saved as Q migrates to Space; non-Q bindings remain. Call `set_bindings()` again if you want Q after upgrading. There is no in-game rebinding menu.
 - `get_equipped_item_id(player_index)` returns the active `my_id` or an empty string.
 - `get_state(player_index)` returns `item_id`, `display_name`, `battle_active`, `alive`, `available`, `ready`, `pending`, and `cooldown_remaining` (seconds).
 - `request_activation(player_index, request_data = {})` supports programmatic use. On a client, `true` means the request was sent, not that the host accepted it.

@@ -7,7 +7,7 @@ This is a dependency library for Brotato content mods. It adds no characters, we
 [h2]Player features / 玩家功能[/h2]
 [list]
 [*]One separate active-item slot per player / 每名玩家一个独立主动道具槽位
-[*]Q on keyboard or RB/R1 on controller by default / 默认 Q 键或手柄右肩键触发
+[*]Space on keyboard or RB/R1 on controller by default / 默认空格键或手柄右肩键触发
 [*]Cooldown and item icon shown during battle / 战斗中显示图标与冷却
 [*]Choose which item to keep when you gain a second active item / 获得第二件时弹窗二选一
 [*]Keeping your original item after buying a new one refunds the purchase / 商店购买后保留旧道具可退款
@@ -22,6 +22,10 @@ Declare [code]L1SC-ActiveItemLibrary[/code] as a dependency. Register your own [
 Version 1.0.1 also provides [code]/root/ModLoader/L1SC-ActiveItemLibrary/CustomStatService[/code]. Content mods can register a namespaced integer stat, create positive or negative ordinary item [code]Effect[/code] resources with [code]make_effect[/code], and read the current value with [code]get_value[/code]. The content mod defines the stat's gameplay meaning and display text; see [code]CREATOR_API.md[/code] for the API.
 
 1.0.1 新增 [code]CustomStatService[/code] 通用自定义整数属性接口。内容模组可登记带命名空间的属性，让普通道具通过原版 [code]Effect[/code] 增减属性，再读取当前值；属性用途和显示文字由内容模组自行定义。接口示例见 ZIP 内 [code]CREATOR_API.md[/code]。
+
+Version 1.0.2 changes the default keyboard binding to Space. Any unversioned binding saved as Q migrates to Space; saved non-Q bindings stay as configured.
+
+1.0.2 将默认键盘按键改为空格键。旧版未标版本且设为 Q 的配置会迁移为空格键；其他非 Q 的自定义按键保持原样。
 
 [h2]Compatibility / 兼容范围[/h2]
 Built for Brotato 1.1.15.4 and ModLoader 6.2.0. Tested with Brotato Online 6.6.6 in isolated two-process LAN: client activation, host-authoritative effect callback, active-item choice and host shop purchase. Every player in an Online session should use the same library and content-mod versions. Online is optional for solo play.

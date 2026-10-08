@@ -15,7 +15,8 @@ const ROUTE_CHOICE_COMMITTED = "choice_committed"
 const ROUTE_CHOICE_REJECTED = "choice_rejected"
 const ONLINE_API_PATH = "/root/ModLoader/six666-BrotatoOnline/BrotatoOnlineAPI"
 const BINDINGS_PATH = "user://l1sc_active_item_library_bindings.cfg"
-const DEFAULT_KEY = KEY_Q
+const BINDINGS_VERSION = 1
+const DEFAULT_KEY = KEY_SPACE
 const DEFAULT_JOYPAD_BUTTON = 5 # Godot 3 right shoulder / RB.
 const CHOICE_QUEUE_TTL_MSEC = 15000
 const HUD_ICON_SIZE = 28
@@ -458,6 +459,7 @@ func set_bindings(keyboard_scancode: int, joypad_button: int) -> bool:
 	var config = ConfigFile.new()
 	config.set_value("input", "keyboard_scancode", _key_scancode)
 	config.set_value("input", "joypad_button", _joypad_button)
+	config.set_value("input", "version", BINDINGS_VERSION)
 	return config.save(BINDINGS_PATH) == OK
 
 
@@ -727,9 +729,16 @@ func _load_bindings() -> void:
 			return
 		_key_scancode = max(1, int(config.get_value("input", "keyboard_scancode", DEFAULT_KEY)))
 		_joypad_button = max(0, int(config.get_value("input", "joypad_button", DEFAULT_JOYPAD_BUTTON)))
+		if int(config.get_value("input", "version", 0)) < BINDINGS_VERSION:
+			if _key_scancode == KEY_Q:
+				_key_scancode = DEFAULT_KEY
+			config.set_value("input", "keyboard_scancode", _key_scancode)
+			config.set_value("input", "version", BINDINGS_VERSION)
+			config.save(BINDINGS_PATH)
 	else:
 		config.set_value("input", "keyboard_scancode", DEFAULT_KEY)
 		config.set_value("input", "joypad_button", DEFAULT_JOYPAD_BUTTON)
+		config.set_value("input", "version", BINDINGS_VERSION)
 		config.save(BINDINGS_PATH)
 
 
